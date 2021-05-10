@@ -13,6 +13,7 @@ import { loadProducts } from '../../store/actions/products';
 const ProductOverViewScreen = ({ navigation }) => {
 
     const [isLoading, setIsLoading] = useState(true)
+    const [isRefreshing, setIsRefreshing] = useState(false)
     const [errMsg, setErrMsg] = useState(null)
     const products = useSelector(state => state.products.avaliableProducts);
     const dispatch = useDispatch();
@@ -22,9 +23,11 @@ const ProductOverViewScreen = ({ navigation }) => {
     }
 
     const fetchProducts= useCallback(async ()=>{
+        
         try {
             await dispatch(loadProducts()); 
             setIsLoading(false)
+            setIsRefreshing(false)
             setErrMsg(null)
         } catch (error) {
             console.log(error);
@@ -35,7 +38,7 @@ const ProductOverViewScreen = ({ navigation }) => {
      
     useEffect(() => {
         const listenerSub=navigation.addListener('willFocus',()=>{
-            fetchProducts()
+            fetchProducts().then(()=> setIsLoading(false))
         })
         return () => {
             listenerSub.remove()
@@ -71,6 +74,8 @@ const ProductOverViewScreen = ({ navigation }) => {
 
     return (
         <FlatList
+            onRefresh={fetchProducts}
+            refreshing={isRefreshing}
             data={products}
             renderItem={({ item }) =>
             <ProductItem

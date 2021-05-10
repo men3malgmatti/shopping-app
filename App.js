@@ -11,6 +11,7 @@ import cartReducer from './store/reducers/cart';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import ordersReducer from './store/reducers/orders';
 import ReduxThunk from 'redux-thunk';
+import authReducer from './store/reducers/auth';
 
 export default function App() {
 
@@ -26,7 +27,8 @@ export default function App() {
   const rootReducer = combineReducers({
     products: productReducer,
     cart: cartReducer,
-    orders: ordersReducer
+    orders: ordersReducer,
+    auth:authReducer
   })
 
   const store = createStore(rootReducer, composeWithDevTools(),applyMiddleware(ReduxThunk))

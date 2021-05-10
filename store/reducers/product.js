@@ -6,8 +6,8 @@ import { CREATE_PRODUCT, DELETE_PRODUCT, LOAD_PRODUCTS, UPDATE_PRODUCT } from ".
 
 
 const initialState = {
-    avaliableProducts: PRODUCTS,
-    userProducts: PRODUCTS.filter(product => product.ownerId === 'u1'),
+    avaliableProducts: [],
+    userProducts: [],
 }
 
 
@@ -15,12 +15,13 @@ const productReducer = (state = initialState, action) => {
     
     switch (action.type) {
         case LOAD_PRODUCTS:
-            return{ avaliableProducts: action.payload,
-                userProducts: action.payload.filter(product => product.ownerId === 'u1'),}
+            action.payload.allProducts.forEach(product => console.log( product ));
+            return{ avaliableProducts: action.payload.allProducts,
+                userProducts: action.payload.allProducts.filter(product => product.ownerId === action.payload.userId),}
 
         case CREATE_PRODUCT:
-            let {id,title,description,price,imageUrl}= action.payload.newProduct
-            const addedItem= new Product(id,'u1',title, imageUrl,description,+price);
+            let {id,userId,title,description,price,imageUrl}= action.payload.newProduct
+            const addedItem= new Product(id,userId,title, imageUrl,description,+price);
             console.log(addedItem);
             return {
                 ...state,

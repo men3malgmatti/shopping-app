@@ -1,4 +1,4 @@
-import { ADD_ORDER } from "../actions/order";
+import { ADD_ORDER, LOAD_ORDERS } from "../actions/order";
 import Order from "../../models/order";
 
 const initialState = {
@@ -10,8 +10,12 @@ const initialState = {
 const ordersReducer = (state = initialState, action) => {
 
     switch (action.type) {
+        
+        case LOAD_ORDERS:
+            return {orders: action.payload}
+        
         case ADD_ORDER:
-            const addedOrder = new Order((new Date).toString(), action.payload.cartItems, action.payload.totalAmount, new Date)
+            const addedOrder = new Order(action.payload.id, action.payload.cartItems, action.payload.totalAmount, action.payload.date)
             const newOrders = state.orders.concat(addedOrder)
             return { ...state, orders: newOrders }
         default:

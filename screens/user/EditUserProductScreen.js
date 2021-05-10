@@ -1,13 +1,17 @@
-import React,{useCallback, useEffect, useReducer} from 'react';
-import {Alert, StyleSheet, Text, TextInput, View} from 'react-native';
+import React,{useCallback, useEffect, useReducer, useState} from 'react';
+import {ActivityIndicator, Alert, StyleSheet, Text, TextInput, View} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import FormInput from '../../components/UI/FormInput';
 import HeaderButton from '../../components/UI/HeaderButton';
+import Colors from '../../constants/Colors';
 import { createProduct, updateProduct } from '../../store/actions/products';
 
 
 const EditUserProductsScreen = ({navigation})=>{
+
+   const [isLoading, setIsLoading] = useState(false);
+   const [err, setErr] = useState(); 
 
    const pid = navigation.getParam('productID');
    
@@ -60,7 +64,9 @@ const EditUserProductsScreen = ({navigation})=>{
 
    const [state, dispatch] = useReducer(formReducer, initialState)
     
-   const onSubmit= useCallback(()=>{
+   const onSubmit= useCallback(async ()=>{
+    setIsLoading(true);
+    setErr(null);
     let formIsValid=true;
     for (const key in state.inputValidation) {
         formIsValid= formIsValid && state.inputValidation[key]
@@ -68,10 +74,19 @@ const EditUserProductsScreen = ({navigation})=>{
     if (!formIsValid) {
         return Alert.alert("Invalid input", "Please insert correct data",[{text:'okay'}])
     }
-    dispatchRedux(pid? updateProduct(pid,state.inputValues): createProduct(state.inputValues))
-    navigation.goBack()  
+    try {      
+    dispatchRedux(pid? 
+        await updateProduct(pid,state.inputValues): 
+        await createProduct(state.inputValues))
+        
+    navigation.goBack()
+    } catch (error) {
+        console.log(error);
+        setErr(error.message)
+    }
+    setIsLoading(false); 
    
-},[dispatch,state]);
+},[dispatch,state,isLoading]);
    
    useEffect(() => {
     navigation.setParams({onSubmit})
@@ -79,7 +94,20 @@ const EditUserProductsScreen = ({navigation})=>{
    }, [onSubmit])
 
   
+if (isLoading) {
+    
+    return (
+        <ActivityIndicator size='large' color={Colors.primary}/>
+    )
+}
 
+if (err) {
+    return (
+        <View>
+            <Text>{err}</Text>
+        </View>
+    )
+}
 
     return (
         <View style={styles.form}>

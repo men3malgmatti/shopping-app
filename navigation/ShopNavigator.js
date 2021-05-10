@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from "react-navigation-stack";
 import ProductOverViewScreen from "../screens/shop/ProductOverviewScreen";
 import Colors from "../constants/Colors";
-import { createAppContainer } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { Platform } from "react-native";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
@@ -11,6 +11,7 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 import { Ionicons } from "@expo/vector-icons";
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditUserProductsScreen from '../screens/user/EditUserProductScreen';
+import AuthScreen from '../screens/user/AuthScreen';
 
 const defaultNavOpt = {
     headerStyle: {
@@ -69,5 +70,16 @@ const shopDrawerNavigator = createDrawerNavigator({
     }
 })
 
+const AuthNavigator= createStackNavigator({
+    Auth: AuthScreen
+},{
+    defaultNavigationOptions:defaultNavOpt,
+    
+});
 
-export default createAppContainer(shopDrawerNavigator);
+const MainNavigator = createSwitchNavigator({
+    AuthFlow: AuthNavigator,
+    MainFlow: shopDrawerNavigator
+})
+
+export default createAppContainer(MainNavigator);
