@@ -49,7 +49,6 @@ const ProductOverViewScreen = ({ navigation }) => {
        fetchProducts();
     }, [fetchProducts])
 
-     
 
     if (isLoading) {
         return <View style={styles.centered}>

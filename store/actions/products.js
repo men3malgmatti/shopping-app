@@ -14,7 +14,7 @@ export const loadProducts=()=>{
         
         const allProducts= [];
         for (const key in resData){
-            allProducts.push(new Product(key,resData[key].userId,resData[key].title,resData[key].imageUrl,resData[key].description,+resData[key].price))
+            allProducts.push(new Product(key,resData[key].ownerId,resData[key].title,resData[key].imageUrl,resData[key].description,+resData[key].price))
         }
         dispatch({type:LOAD_PRODUCTS, payload:{allProducts,userId}})
     } catch (error) {  
@@ -34,7 +34,7 @@ export const createProduct=(product)=>{
     body:JSON.stringify({...product,ownerId: userId})
     });
     const resData= await response.json();
-    const newProduct={...product, id:resData.name, userId }
+    const newProduct={...product, id:resData.name,ownerId: userId }
     dispatch({ type: CREATE_PRODUCT, payload: {newProduct} })
 
    } 

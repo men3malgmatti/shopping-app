@@ -14,9 +14,8 @@ const EditUserProductsScreen = ({navigation})=>{
    const [err, setErr] = useState(); 
 
    const pid = navigation.getParam('productID');
-   
    const product= useSelector(state=> state.products.userProducts.find(prod=> prod.id===pid))
-  
+   
    const dispatchRedux= useDispatch();
    
 

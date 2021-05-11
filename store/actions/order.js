@@ -12,7 +12,7 @@ export const loadOrders= ()=>{
             
             const allOrders= [];
             for (const key in resData){
-                allOrders.push(new Order(key,resData[key].cartItems,resData[key].totalAmount,resData[key].date))
+                allOrders.push(new Order(key,resData[key].cartItems,+resData[key].totalAmount,resData[key].date))
             }
             dispatch({type:LOAD_ORDERS, payload:allOrders})
         } catch (error) {
@@ -24,9 +24,10 @@ export const loadOrders= ()=>{
 
 export const addOrder = (cartItems, totalAmount) => {
     return async (dispatch,getState)=>{
-        let {userId}= getState().auth
+        let {userId}= getState().auth;
+        let token= getState().auth.token;
         const date= new Date().toISOString(); 
-        const response= await fetch(`https://shopping-app-984f2-default-rtdb.europe-west1.firebasedatabase.app/orders/${userId}.json`,
+        const response= await fetch(`https://shopping-app-984f2-default-rtdb.europe-west1.firebasedatabase.app/orders/${userId}.json?auth=${token}`,
         {method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({cartItems,totalAmount,date})
