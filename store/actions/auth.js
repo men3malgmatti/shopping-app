@@ -16,7 +16,7 @@ export const logOut= ()=>{
 export const signUp = (email, password)=>{
     return async dispatch=>{
       console.log(email,password);  
-      const response= await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD-FqmqyBXGUCc4DqDVx5APDX9yHwzXqvw',{
+      const response= await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=*************',{
           method:'POST',
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify({
